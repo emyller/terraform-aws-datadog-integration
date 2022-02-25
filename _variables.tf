@@ -17,3 +17,9 @@ variable "app_key" {
   type = string
   sensitive = true
 }
+
+variable "cloudwatch_log_groups_prefix" {
+  description = "If set, will forward logs from log groups named with this prefix."
+  type = string
+  default = null
+}
