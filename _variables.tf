@@ -5,3 +5,15 @@ variable "name" {
   EOT
   type = string
 }
+
+variable "api_key" {
+  description = "The DataDog API key for the account."
+  type = string
+  sensitive = true
+}
+
+variable "app_key" {
+  description = "The DataDog app key for the account."
+  type = string
+  sensitive = true
+}
