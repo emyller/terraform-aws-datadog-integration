@@ -1,7 +1,8 @@
 variable "name" {
   description = <<-EOT
     A name for the integration.
-    Resources will be named with "datadog-$${var.name}".
+    Resources in AWS will be named with "datadog-$${var.name}".
+    Resources in DataDog will be tagged with "dd:$${var.name}."
   EOT
   type = string
 }
