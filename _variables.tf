@@ -18,6 +18,12 @@ variable "app_key" {
   sensitive = true
 }
 
+variable "log_aws_services" {
+  description = "AWS services to log. This must match the DataDog account enabled services."
+  type = list(string)
+  default = []
+}
+
 variable "cloudwatch_log_groups_prefix" {
   description = "If set, will forward logs from log groups named with this prefix."
   type = string

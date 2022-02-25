@@ -1,3 +1,8 @@
+locals {
+  # Collect all log-ready AWS services enabled in the DataDog account
+  account_aws_log_ready_services = jsondecode(data.http.available_log_ready_services.body)[*].id
+}
+
 resource "datadog_integration_aws_lambda_arn" "collector" {
   /*
   Set up a collector integration in DataDog
@@ -11,7 +16,7 @@ resource "datadog_integration_aws_log_collection" "main" {
   Register AWS services to the log collector
   */
   account_id = data.aws_caller_identity.main.account_id
-  services = [for item in jsondecode(data.http.available_log_ready_services.body): item.id]
+  services = setintersection(var.log_aws_services, local.account_aws_log_ready_services)
 }
 
 data "http" "available_log_ready_services" {
