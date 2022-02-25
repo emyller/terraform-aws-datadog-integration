@@ -1,7 +1,7 @@
 locals {
   # Map all known CloudWatch log groups
   log_groups = {
-    for name in data.aws_cloudwatch_log_groups.all.log_group_names:
+    for name in try(data.aws_cloudwatch_log_groups.all[0].log_group_names, []):
     (name) => data.aws_cloudwatch_log_group.all[name].arn
     if name != "/aws/lambda/datadog-forwarder"  # Prevent infinite loops
   }
@@ -13,14 +13,15 @@ data "aws_cloudwatch_log_groups" "all" {
 
   If a prefix isn't given, use a random string that never matches any groups.
   */
-  log_group_name_prefix = coalesce(var.cloudwatch_log_groups_prefix, uuid())
+  count = var.cloudwatch_log_groups_prefix != null ? 1 : 0
+  log_group_name_prefix = var.cloudwatch_log_groups_prefix
 }
 
 data "aws_cloudwatch_log_group" "all" {
   /*
   Fetch details about every log group in CloudWatch
   */
-  for_each = data.aws_cloudwatch_log_groups.all.log_group_names
+  for_each = try(data.aws_cloudwatch_log_groups.all[0].log_group_names, {})
   name = each.key
 }
 
